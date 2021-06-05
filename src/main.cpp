@@ -6,6 +6,8 @@
 #include "Parser.hpp"
 #include "CodeGenerator.hpp"
 
+#define DEBUG
+
 std::list<char> getSourceCode(char* sourceFileName) {
     std::ifstream inputFileStream(sourceFileName);
 
@@ -25,40 +27,50 @@ std::list<char> getSourceCode(char* sourceFileName) {
 }
 
 int main(int argc, char *argv[]) {
+    #ifdef DEBUG
+    std::cout << "-----------<DEBUG MODE>--------------" << std::endl;
+    std::cout << "START" << std::endl;
+    std::cout << std::endl;
+    #endif
     if (argc == 2) {
         char* sourceFileName = argv[1];
-        std::cout << sourceFileName << std::endl;
-
+       
         std::list<char> sourceCode = getSourceCode(sourceFileName);
 
-        /* For Debug */
+        #ifdef DEBUG
         std::cout << "1. Get Source Code " << std::endl;
         for(std::list<char>::iterator iter = sourceCode.begin(); iter != sourceCode.end(); iter++){
             std::cout << *iter << "";
         }    
         std::cout << std::endl;
+        #endif
 
         std::list<Token> tokens = Scanner::scan(sourceCode);
 
-        /* For Debug */
+        #ifdef DEBUG
         std::cout << "2. Scanner " << std::endl;
         for(std::list<Token>::iterator iter = tokens.begin(); iter != tokens.end(); iter++){
             std::cout << iter->getType() << " ";
         }    
         std::cout << std::endl;
+        #endif
 
         SyntaxTree* syntaxTree = Parser::parse(tokens);
 
-        // For Debug
+        #ifdef DEBUG
         std::cout << "3. Parser " << std::endl;
         std::cout << std::endl;
+        #endif
 
         std::string targetCode = CodeGenerator::generate(syntaxTree);
 
-        // For Debug
+        #ifdef DEBUG
         std::cout << "4. Code Generator " << std::endl;
         std::cout << targetCode;
         std::cout << std::endl;
+        std::cout << "SUCCESS" << std::endl;
+        std::cout << "-----------------------------" << std::endl;
+        #endif
         
     } else {
         std::cout << "Please input the file name.";
