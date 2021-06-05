@@ -29,6 +29,7 @@ class Token {
     Token(TokenType type, std::string value);
     ~Token();
     TokenType getType();
+    std::string getValue();
 };
 
 #endif

@@ -3,7 +3,7 @@ CXXFLAGS=
 
 SRC_DIR = src
 BUILD_DIR = build
-TARGET = compiler
+TARGET = compiler2021
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS = $(subst ${SRC_DIR},${BUILD_DIR},${SOURCES:.cpp=.o})
 

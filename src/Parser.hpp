@@ -12,7 +12,7 @@ class Parser {
   public:
     Parser();
     ~Parser();
-    static SyntaxTree* parse(std::list<Token*> tokens);
+    static SyntaxTree* parse(std::list<Token> tokens);
 };
 
 #endif

@@ -11,7 +11,7 @@ class Scanner {
   public:
     Scanner();
     ~Scanner();
-    static std::list<Token*> scan(std::string sourceCode);
+    static std::list<Token> scan(std::list<char> sourceCode);
 };
 
 #endif
