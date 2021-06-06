@@ -50,9 +50,9 @@ int main(int argc, char *argv[]) {
         #ifdef DEBUG
         std::cout << "2. Scanner " << std::endl;
         for(std::list<Token>::iterator iter = tokens.begin(); iter != tokens.end(); iter++){
-            std::cout << iter->getType() << " ";
+            std::cout << "[" << iter->getTokenTypeName() << ",\"" << iter->getValue() << "\"] ";
         }    
-        std::cout << std::endl;
+        std::cout << std::endl << std::endl;
         #endif
 
         SyntaxTree* syntaxTree = Parser::parse(tokens);
