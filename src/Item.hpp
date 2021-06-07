@@ -24,15 +24,15 @@ class Item {
 
   bool is_nonterminal() { return type == item_type::nonterminal; }
 
-  bool operator==(Item &other) {
+  bool operator==(const Item &other) const {
     return item_name == other.item_name && this->type == other.type;
   }
 
   bool operator==(const string &str) { return item_name == str; }
 
-  bool operator!=(Item &other) { return !(*this == other); }
+  bool operator!=(const Item &other) const { return !(*this == other); }
 
-  bool operator<(Item &other) {
+  bool operator<(const Item &other) const {
     if (type < other.type) return true;
     if (type > other.type) return false;
 
@@ -45,7 +45,7 @@ class Item {
 
   void set_value(string value) { this->item_value = value; }
 
-  string get_item_name() { return this->item_name; }
+  string get_item_name() const { return this->item_name; }
 
   bool can_be_empty() { return __can_be_empty; }
 
