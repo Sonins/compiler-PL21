@@ -57,15 +57,14 @@ int main(int argc, char *argv[]) {
         std::cout << std::endl << std::endl;
         #endif
 
-        SyntaxTree* syntaxTree = Parser::parse(tokens);
+        Parser parser;
+        parser.print_parsing_table();
+        SyntaxTree* syntaxTree = parser.parse(tokens);
         
         #ifdef DEBUG
         std::cout << "3. Parser " << std::endl;
         std::cout << std::endl;
         #endif
-        
-        extern Grammar lang_grammar;
-        parsing_table table(lang_grammar.get_rules_map());
         
         
         std::string targetCode = CodeGenerator::generate(syntaxTree);

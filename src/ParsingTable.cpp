@@ -11,13 +11,13 @@ using std::string;
 using std::vector;
 using std::stack;
 
-action::action(action_type tp, state tar) : type(tp), target_state(tar) {}
+action::action(action_type tp, int tar) : type(tp), target_state(tar) {}
 
 bool action::is_shift() { return type == action_type::shift; }
 
 bool action::is_reduce() { return type == action_type::reduce; }
 
-state action::get_target_state() { return target_state; }
+int action::get_target_state() { return target_state; }
 
 /**
  * Handler implementation
@@ -142,7 +142,7 @@ bool state::contains_handlers(vector<handler> &h) {
   return true;
 }
 
-void state::link_other_state(Item item, state &other) {
+void state::link_other_state(Item item, int other) {
   action act(action_type::shift, other);
   if (act_map.find(item) != act_map.end()) {
     fprintf(stderr, "confilct may have occurred\n");
@@ -163,8 +163,7 @@ action state::find_action(Item item) {
   if (act_map.find(item) != act_map.end()) {
     return act_map.find(item)->second;
   } else {
-    vector<handler> empty_set = {};
-    return action(action_type::shift, state(-1, empty_set));
+    return action(action_type::shift, -1);
   }
 }
 
@@ -172,7 +171,9 @@ action state::find_action(Item item) {
  * parsing_table
 */
 
-
+parsing_table::parsing_table() {
+  
+}
 
 parsing_table::parsing_table(std::map<Item, vector<Rule>> rmap) {
   processing_rules(rmap);
@@ -180,6 +181,12 @@ parsing_table::parsing_table(std::map<Item, vector<Rule>> rmap) {
     return ls.get_state_number() < rs.get_state_number();
   });
 }
+
+
+/**
+ * making dfa state graph.
+ * 파싱테이블 dfa 구성하는 init 함수. 
+*/
 
 void parsing_table::processing_rules(std::map<Item, vector<Rule>> &rmap) {
 
@@ -200,7 +207,6 @@ void parsing_table::processing_rules(std::map<Item, vector<Rule>> &rmap) {
   while (!q.empty()) {
     cur_state = q.top();
     q.pop();
-    state_set.push_back(cur_state);
     /**
      * moves에는 현재 state의 이동 가능 목록임.
      * 예를 들어, 어떤 state가 A->.B B->.CD C->.e C->.d 라고 한다면
@@ -225,7 +231,7 @@ void parsing_table::processing_rules(std::map<Item, vector<Rule>> &rmap) {
       for (auto st : state_set) {
         if (st.contains_handlers(new_hand_set)) {
           // if new state already exist.
-          cur_state.link_other_state(it.first, st);
+          cur_state.link_other_state(it.first, st.get_state_number());
           another_state_exist = true;
           break;
         }
@@ -236,9 +242,10 @@ void parsing_table::processing_rules(std::map<Item, vector<Rule>> &rmap) {
       hand_set = generate_closure(rmap, new_hand_set);
       
       state new_state(state_num++, hand_set);
-      cur_state.link_other_state(it.first, new_state);
+      cur_state.link_other_state(it.first, new_state.get_state_number());
       q.push(new_state);
     }
+    state_set.push_back(cur_state);
   }
 }
 
@@ -301,6 +308,7 @@ void parsing_table::printout_table() {
   for (auto st : state_set) {
     st.state_print();
   }
+
   extern vector<Item> terminals;
   for (auto it : terminals) {
     std::cout << "\t" << it.get_item_name();
@@ -311,12 +319,32 @@ void parsing_table::printout_table() {
     std::cout << st.get_state_number();
     for (auto it : terminals) {
       action act =st.find_action(it);
-      if (act.get_target_state().get_state_number() == -1) {
+      if (act.get_target_state() == -1) {
         std::cout << "\t";
         continue;
       }
       
-        std::cout << "\tS" << act.get_target_state().get_state_number();
+      std::cout << "\tS" << act.get_target_state();
+    }
+    std::cout << std::endl;
+  }
+
+  extern vector<Item> nonterminals;
+  for (auto it : nonterminals) {
+    std::cout << "\t" << it.get_item_name();
+  }
+  std::cout << std::endl;
+
+  for (auto st : state_set) {
+    std::cout << st.get_state_number();
+    for (auto it : nonterminals) {
+      action act =st.find_action(it);
+      if (act.get_target_state() == -1) {
+        std::cout << "\t";
+        continue;
+      }
+      
+      std::cout << "\tS" << act.get_target_state();
     }
     std::cout << std::endl;
   }

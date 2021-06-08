@@ -101,12 +101,12 @@ class Grammar {
     return follow_map.find(_item)->second;
   }
 
-  std::map<Item, vector<Rule>> get_rules_map() { return rules_map; }
+  std::map<Item, vector<Rule> > get_rules_map() { return rules_map; }
 
  private:
   void init_follow() {
     std::map<Item, int> depend;
-    std::map<Item, vector<Item>> depend_list;
+    std::map<Item, vector<Item> > depend_list;
 
     for (auto i : nonterminals) {
       depend.insert(std::make_pair(i, 0));
@@ -235,9 +235,9 @@ class Grammar {
     return result;
   }
 
-  std::map<Item, set<Item>> first_map;
-  std::map<Item, set<Item>> follow_map;
-  std::map<Item, vector<Rule>> rules_map;
+  std::map<Item, set<Item> > first_map;
+  std::map<Item, set<Item> > follow_map;
+  std::map<Item, vector<Rule> > rules_map;
   vector<Rule> rules;
   vector<Item> nonterminals;
   vector<Item> terminals;

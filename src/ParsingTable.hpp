@@ -38,7 +38,7 @@ class state {
 
   bool contains_handlers(vector<handler> &h);
 
-  void link_other_state(Item item, state &other);
+  void link_other_state(Item item, int other);
 
   int get_state_number() const;
 
@@ -57,18 +57,17 @@ class state {
 
 class action {
  public:
-  action(action_type tp, state tar);
+  action(action_type tp, int tar);
 
   bool is_shift();
 
   bool is_reduce();
 
-  state get_target_state();
+  int get_target_state();
 
  private:
   action_type type;
-  state target_state;
-  int number;
+  int target_state;
 };
 
 class handler {
@@ -104,7 +103,7 @@ class handler {
 class parsing_table {
  public:
   parsing_table(std::map<Item, vector<Rule>> rmap);
-
+  parsing_table();
   void printout_table();
 
  private:
