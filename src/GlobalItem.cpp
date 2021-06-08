@@ -52,7 +52,7 @@ vector<Rule> rule_list = {
     Rule(_block_, vector<Item>({_bopen_, _decls_, _slist_, _bclose_})),
     Rule(_slist_, vector<Item>({_slist_, _stat_})),
     Rule(_slist_, vector<Item>({_stat_})),
-    Rule(_stat_, vector<Item>({_if_, _cond_, _then_, _else_, _block_})),
+    Rule(_stat_, vector<Item>({_if_, _cond_, _then_, _block_, _else_, _block_})),
     Rule(_stat_, vector<Item>({_word_, _eq_, _expr_, _brk_})),
     Rule(_stat_, vector<Item>({_exit_, _expr_, _brk_})),
     Rule(_cond_, vector<Item>({_expr_, _lgreater_, _expr_})),
