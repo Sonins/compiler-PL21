@@ -104,6 +104,7 @@ class parsing_table {
  public:
   parsing_table(std::map<Item, vector<Rule>> rmap);
   parsing_table();
+  ~parsing_table();
   void printout_table();
 
  private:
@@ -112,6 +113,6 @@ class parsing_table {
   vector<handler> generate_closure(std::map<Item, vector<Rule>> &rmap,
                                    vector<handler> &basic_handler);
 
-  vector<state> state_set;
+  vector<state *> state_set;
 };
 #endif

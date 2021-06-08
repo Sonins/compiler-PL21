@@ -9,7 +9,7 @@
 
 class Parser {
   private:
-    parsing_table table;
+    parsing_table *table;
   public:
     Parser();
     ~Parser();

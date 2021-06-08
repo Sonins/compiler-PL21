@@ -175,10 +175,15 @@ parsing_table::parsing_table() {
   
 }
 
+parsing_table::~parsing_table() {
+  for (auto st : state_set)
+    delete st;
+}
+
 parsing_table::parsing_table(std::map<Item, vector<Rule>> rmap) {
   processing_rules(rmap);
-  std::sort(state_set.begin(), state_set.end(), [](const state& ls, const state& rs) {
-    return ls.get_state_number() < rs.get_state_number();
+  std::sort(state_set.begin(), state_set.end(), [](const state* ls, const state* rs) {
+    return ls->get_state_number() < rs->get_state_number();
   });
 }
 
@@ -198,22 +203,23 @@ void parsing_table::processing_rules(std::map<Item, vector<Rule>> &rmap) {
   hand_set = vector<handler>{basic_handler};
   hand_set = generate_closure(rmap, hand_set);
 
-  state cur_state(state_num++, hand_set);
-
+  state *cur_state = new state(state_num++, hand_set);
+  
   // DO BFS.
-  stack<state> q;
+  stack<state *> q;
   q.push(cur_state);
 
   while (!q.empty()) {
     cur_state = q.top();
     q.pop();
+    state_set.push_back(cur_state);
     /**
      * moves에는 현재 state의 이동 가능 목록임.
      * 예를 들어, 어떤 state가 A->.B B->.CD C->.e C->.d 라고 한다면
      * moves 안에는 {B, A->.B}, {C, B->.CD}, {e, C->.e}, {d, C->.d}가 있음.
     */
 
-    map<Item, vector<handler>> moves = cur_state.possible_moves();
+    map<Item, vector<handler>> moves = cur_state->possible_moves();
 
     bool another_state_exist = false;
     for (auto it : moves) {
@@ -229,9 +235,9 @@ void parsing_table::processing_rules(std::map<Item, vector<Rule>> &rmap) {
       }
 
       for (auto st : state_set) {
-        if (st.contains_handlers(new_hand_set)) {
+        if (st->contains_handlers(new_hand_set)) {
           // if new state already exist.
-          cur_state.link_other_state(it.first, st.get_state_number());
+          cur_state->link_other_state(it.first, st->get_state_number());
           another_state_exist = true;
           break;
         }
@@ -241,11 +247,11 @@ void parsing_table::processing_rules(std::map<Item, vector<Rule>> &rmap) {
 
       hand_set = generate_closure(rmap, new_hand_set);
       
-      state new_state(state_num++, hand_set);
-      cur_state.link_other_state(it.first, new_state.get_state_number());
+      state *new_state = new state(state_num++, hand_set);
+      cur_state->link_other_state(it.first, new_state->get_state_number());
       q.push(new_state);
     }
-    state_set.push_back(cur_state);
+    
   }
 }
 
@@ -306,7 +312,7 @@ vector<handler> parsing_table::generate_closure(
 
 void parsing_table::printout_table() {
   for (auto st : state_set) {
-    st.state_print();
+    st->state_print();
   }
 
   extern vector<Item> terminals;
@@ -316,9 +322,9 @@ void parsing_table::printout_table() {
   std::cout << std::endl;
 
   for (auto st : state_set) {
-    std::cout << st.get_state_number();
+    std::cout << st->get_state_number();
     for (auto it : terminals) {
-      action act =st.find_action(it);
+      action act =st->find_action(it);
       if (act.get_target_state() == -1) {
         std::cout << "\t";
         continue;
@@ -336,9 +342,9 @@ void parsing_table::printout_table() {
   std::cout << std::endl;
 
   for (auto st : state_set) {
-    std::cout << st.get_state_number();
+    std::cout << st->get_state_number();
     for (auto it : nonterminals) {
-      action act =st.find_action(it);
+      action act =st->find_action(it);
       if (act.get_target_state() == -1) {
         std::cout << "\t";
         continue;

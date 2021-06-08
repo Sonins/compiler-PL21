@@ -4,7 +4,6 @@
 
 using std::string;
 using std::vector;
-using std::set;
 
 #ifndef UTIL_HPP
 #define UTIL_HPP
