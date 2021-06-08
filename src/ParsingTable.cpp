@@ -159,6 +159,15 @@ void state::state_print() {
   std::cout << std::endl;
 }
 
+action state::find_action(Item item) {
+  if (act_map.find(item) != act_map.end()) {
+    return act_map.find(item)->second;
+  } else {
+    vector<handler> empty_set = {};
+    return action(action_type::shift, state(-1, empty_set));
+  }
+}
+
 /**
  * parsing_table
 */
@@ -291,5 +300,24 @@ vector<handler> parsing_table::generate_closure(
 void parsing_table::printout_table() {
   for (auto st : state_set) {
     st.state_print();
+  }
+  extern vector<Item> terminals;
+  for (auto it : terminals) {
+    std::cout << "\t" << it.get_item_name();
+  }
+  std::cout << std::endl;
+
+  for (auto st : state_set) {
+    std::cout << st.get_state_number();
+    for (auto it : terminals) {
+      action act =st.find_action(it);
+      if (act.get_target_state().get_state_number() == -1) {
+        std::cout << "\t";
+        continue;
+      }
+      
+        std::cout << "\tS" << act.get_target_state().get_state_number();
+    }
+    std::cout << std::endl;
   }
 }

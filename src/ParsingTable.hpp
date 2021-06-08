@@ -46,6 +46,8 @@ class state {
 
   void state_print();
 
+  action find_action(Item item);
+
  private:
   int state_number;
   map<Item, action> act_map;

@@ -2,6 +2,8 @@
 #include <list>
 #include <iostream>
 #include <fstream>
+
+#include "ParsingTable.hpp"
 #include "Scanner.hpp"
 #include "Parser.hpp"
 #include "CodeGenerator.hpp"
@@ -56,12 +58,16 @@ int main(int argc, char *argv[]) {
         #endif
 
         SyntaxTree* syntaxTree = Parser::parse(tokens);
-
+        
         #ifdef DEBUG
         std::cout << "3. Parser " << std::endl;
         std::cout << std::endl;
         #endif
-
+        
+        extern Grammar lang_grammar;
+        parsing_table table(lang_grammar.get_rules_map());
+        
+        
         std::string targetCode = CodeGenerator::generate(syntaxTree);
 
         #ifdef DEBUG
