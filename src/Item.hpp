@@ -1,9 +1,8 @@
+#ifndef ITEM_HPP
+#define ITEM_HPP
 #include <string>
 
 using std::string;
-
-#ifndef ITEM_HPP
-#define ITEM_HPP
 
 enum class item_type {
   nonterminal = 0,

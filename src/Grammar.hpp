@@ -1,3 +1,5 @@
+#ifndef GRAMMAR_HPP
+#define GRAMMAR_HPP
 #include <algorithm>
 #include <functional>
 #include <iostream>
@@ -14,8 +16,7 @@ using std::stack;
 using std::string;
 using std::vector;
 
-#ifndef GRAMMAR_HPP
-#define GRAMMAR_HPP
+
 #define START_ITEM _prog_
 
 extern Item _empty_;
